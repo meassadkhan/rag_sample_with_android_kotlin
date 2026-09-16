@@ -3,7 +3,7 @@ package com.example.document_reader_rag.ui.ask
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.document_reader_rag.data.local.InMemoryVectorStore
-import com.example.document_reader_rag.domain.usecase.CreateAugmentationUseCase
+import com.example.document_reader_rag.domain.usecase.GenerateAnswerUseCase
 import com.example.document_reader_rag.ui.common.readableMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AskViewModel @Inject constructor(
     private val vectorStore: InMemoryVectorStore,
-    private val createAugmentationUseCase: CreateAugmentationUseCase
+    private val createAugmentationUseCase: GenerateAnswerUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AskUiState())
@@ -39,7 +39,6 @@ class AskViewModel @Inject constructor(
     fun onQuestionChange(question: String) {
         _uiState.update { it.copy(question = question) }
     }
-
     fun onSubmit() {
         val question = _uiState.value.question.trim()
         val storedEmbeddings = vectorStore.chunks.value

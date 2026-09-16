@@ -2,6 +2,8 @@ package com.example.document_reader_rag.domain.usecase
 
 import com.example.document_reader_rag.data.remote.dto.GenerateContentRequest
 import com.example.document_reader_rag.data.repository.GenerationContentRepository
+import com.example.document_reader_rag.utils.RagException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 
@@ -25,6 +27,7 @@ class GenerateContentUseCase @Inject constructor(
         context: String,
         question: String
     ): String {
+        try {
             val request = GenerateContentRequest(
                 model = "gemini-3.8-flash",
                 systemInstruction = SYSTEM_INSTRUCTION,
@@ -47,6 +50,10 @@ class GenerateContentUseCase @Inject constructor(
                 ?.firstOrNull { it.type == "text" }
                 ?.text
                 .orEmpty()
+
+        } catch (e: SocketTimeoutException) {
+            throw RagException.GenerationTimeout(e)
+        }
 
 
     }

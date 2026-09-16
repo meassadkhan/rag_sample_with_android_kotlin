@@ -88,7 +88,6 @@ fun AskContent(
             onValueChange = onQuestionChange,
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Ask a question") },
-            placeholder = { Text("What is structured concurrency?") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(onSearch = { if (canSubmit) submit() })
@@ -126,7 +125,7 @@ fun AskContent(
             ) {
                 CircularProgressIndicator(modifier = Modifier.size(20.dp))
                 Text(
-                    text = "Embedding question and ranking chunks",
+                    text = "Embedding question,ranking chunks and generating Answer",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

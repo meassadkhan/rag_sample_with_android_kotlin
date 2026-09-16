@@ -17,12 +17,19 @@ class RetrieveRelevantChunksUseCase @Inject constructor(
         storedEmbedding: List<EmbeddedChunk>,
         topK: Int = 3
     ): List<SimilarityScored> {
-        val queryEmbedding = repository.embed(question)
-        return storedEmbedding.map { chunk ->
-            SimilarityScored(chunk, VectorMath.cosineSimilarity(chunk.embedding, queryEmbedding))
+        try {
+            val queryEmbedding = repository.embed(question)
+            return storedEmbedding.map { chunk ->
+                SimilarityScored(
+                    chunk,
+                    VectorMath.cosineSimilarity(chunk.embedding, queryEmbedding)
+                )
+            }
+                .sortedByDescending { it.score }
+                .filter { (_, score) -> score >= 0.5f }
+                .take(topK)
+        } catch (e: Exception) {
+            throw Exception("Retrieve Relevant Exception", e)
         }
-            .sortedByDescending { it.score }
-            .filter { (_, score) -> score >= 4 }
-            .take(topK)
     }
 }

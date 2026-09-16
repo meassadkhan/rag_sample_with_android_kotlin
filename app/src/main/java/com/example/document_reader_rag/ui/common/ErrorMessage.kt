@@ -1,5 +1,6 @@
 package com.example.document_reader_rag.ui.common
 
+import android.util.Log
 import retrofit2.HttpException
 
 /**
@@ -10,9 +11,13 @@ import retrofit2.HttpException
  */
 fun Throwable.readableMessage(): String = when (this) {
     is HttpException -> {
+        Log.i("DebugTAG", "readableMessage:HttpException ")
         val body = runCatching { response()?.errorBody()?.string() }.getOrNull()
         "HTTP ${code()} ${message()}".trim() + if (!body.isNullOrBlank()) "\n\n$body" else ""
     }
 
-    else -> message ?: this::class.simpleName ?: "Unknown error"
+    else ->{
+        Log.i("DebugTAG", "readableMessage:else part ")
+        message ?: this::class.simpleName ?: "Unknown error"
+    }
 }
